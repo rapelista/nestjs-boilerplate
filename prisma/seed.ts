@@ -1,12 +1,17 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
+
 import { PrismaClient } from '@prisma/client';
-import { generatePassword } from '../src/lib/utils';
+import { hash } from 'bcrypt';
 const prisma = new PrismaClient();
 
 type UserType = {
   name: string;
   username: string;
 };
+
+async function generatePassword(password: string, saltOrRounds: number = 10) {
+  return await hash(password, saltOrRounds);
+}
 
 async function main() {
   console.log('🌱 Seeding database...');
