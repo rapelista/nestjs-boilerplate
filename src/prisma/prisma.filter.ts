@@ -14,6 +14,10 @@ type ErrorCodeMappingType = {
   [key: string]: string;
 };
 
+type ErrorDetailMappingType = {
+  [key: string]: string;
+};
+
 @Catch(Prisma.PrismaClientKnownRequestError)
 export class PrismaFilter implements ExceptionFilter {
   private errorStatusMapping: ErrorStatusMappingType = {
@@ -24,18 +28,24 @@ export class PrismaFilter implements ExceptionFilter {
     P2025: 'not_found',
   };
 
+  private errorDetailMapping: ErrorDetailMappingType = {
+    P2025: 'resource not found',
+  };
+
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
+    const status = this.errorStatusMapping[exception.code] || 500;
+    const code = this.errorCodeMapping[exception.code] || 'unknown';
+    const detail = this.errorDetailMapping[exception.code] || 'unknown error';
+
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
-
-    const status = this.errorStatusMapping[exception.code] || 500;
 
     return response.status(status).json({
       type: 'client_error',
       errros: [
         {
-          code: this.errorCodeMapping[exception.code] || 'unknown',
-          message: exception.message.toLocaleLowerCase(),
+          code,
+          detail,
           attr: null,
         },
       ],

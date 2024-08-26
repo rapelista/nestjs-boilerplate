@@ -1,14 +1,17 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   HttpCode,
   Param,
+  Patch,
   Query,
   UsePipes,
 } from '@nestjs/common';
 import { ZodValidationPipe } from 'src/zod/zod.pipe';
 import { UsersFilterSchema, usersFilterSchema } from './dto/filter.dto';
+import { userUpdateSchema, UserUpdateSchema } from './dto/update.dto';
 import { UserSchema, userSchema } from './entities/user.dto';
 import { UsersService } from './users.service';
 
@@ -26,6 +29,15 @@ export class UsersController {
   @UsePipes(new ZodValidationPipe(userSchema.pick({ id: true })))
   async findOne(@Param() { id }: Pick<UserSchema, 'id'>) {
     return this.service.findOne(id);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param(new ZodValidationPipe(userSchema.pick({ id: true })))
+    { id }: Pick<UserSchema, 'id'>,
+    @Body(new ZodValidationPipe(userUpdateSchema)) body: UserUpdateSchema,
+  ) {
+    return this.service.update(id, body);
   }
 
   @Delete(':id')

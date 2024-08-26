@@ -13,7 +13,7 @@ export class ZodValidationFilter implements ExceptionFilter {
       errors: exception.issues.map(({ code, path, message }) => ({
         code,
         attr: path.join('.'),
-        detail: message,
+        detail: message.toLocaleLowerCase(),
       })),
       timestamp: new Date().toISOString(),
     });
