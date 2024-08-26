@@ -32,4 +32,15 @@ export class UsersService {
     });
     return { data };
   }
+
+  async remove(id: number) {
+    /**
+     * @todo: Custom Error for Delete, so we can delete without checking first.
+     */
+    await this.findOne(id);
+
+    await this.prisma.user.delete({
+      where: { id },
+    });
+  }
 }
