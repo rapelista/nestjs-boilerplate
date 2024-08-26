@@ -1,18 +1,12 @@
+import { Body, Controller, Delete, Get, HttpCode, Patch } from '@nestjs/common';
+import { CommonSchema } from 'src/zod/dto/common.dto';
+import { PaginationSchema } from 'src/zod/dto/pagination.dto';
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  Patch,
-  Query,
-  UsePipes,
-} from '@nestjs/common';
+  ZodValidateCommon,
+  ZodValidatePagination,
+} from 'src/zod/zod.decorator';
 import { ZodValidationPipe } from 'src/zod/zod.pipe';
-import { UsersFilterSchema, usersFilterSchema } from './dto/filter.dto';
-import { userUpdateSchema, UserUpdateSchema } from './dto/update.dto';
-import { UserSchema, userSchema } from './entities/user.dto';
+import { UpdateUserSchema, updateUserSchema } from './dto/update.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -20,30 +14,26 @@ export class UsersController {
   constructor(private readonly service: UsersService) {}
 
   @Get()
-  @UsePipes(new ZodValidationPipe(usersFilterSchema))
-  async findAll(@Query() queries: UsersFilterSchema) {
+  async findAll(@ZodValidatePagination() queries: PaginationSchema) {
     return this.service.findAll(queries);
   }
 
   @Get(':id')
-  @UsePipes(new ZodValidationPipe(userSchema.pick({ id: true })))
-  async findOne(@Param() { id }: Pick<UserSchema, 'id'>) {
-    return this.service.findOne(id);
+  async findOne(@ZodValidateCommon() params: CommonSchema) {
+    return this.service.findOne(params.id);
   }
 
   @Patch(':id')
   async update(
-    @Param(new ZodValidationPipe(userSchema.pick({ id: true })))
-    { id }: Pick<UserSchema, 'id'>,
-    @Body(new ZodValidationPipe(userUpdateSchema)) body: UserUpdateSchema,
+    @ZodValidateCommon() params: CommonSchema,
+    @Body(new ZodValidationPipe(updateUserSchema)) body: UpdateUserSchema,
   ) {
-    return this.service.update(id, body);
+    return this.service.update(params.id, body);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  @UsePipes(new ZodValidationPipe(userSchema.pick({ id: true })))
-  async remove(@Param() { id }: Pick<UserSchema, 'id'>) {
-    return this.service.remove(id);
+  async remove(@ZodValidateCommon() params: CommonSchema) {
+    return this.service.remove(params.id);
   }
 }

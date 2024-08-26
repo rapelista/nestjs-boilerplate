@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UsersFilterSchema } from './dto/filter.dto';
+import { PaginationSchema } from 'src/zod/dto/pagination.dto';
 import { select } from './dto/select.dto';
+import { UpdateUserSchema } from './dto/update.dto';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll({ page, limit }: UsersFilterSchema) {
+  async findAll({ page, limit }: PaginationSchema) {
     const data = await this.prisma.user.findMany({
       take: limit,
       skip: (page - 1) * limit,
@@ -33,7 +33,7 @@ export class UsersService {
     return { data };
   }
 
-  async update(id: number, body: Prisma.UserUpdateInput) {
+  async update(id: number, body: UpdateUserSchema) {
     await this.findOne(id);
 
     const data = await this.prisma.user.update({
