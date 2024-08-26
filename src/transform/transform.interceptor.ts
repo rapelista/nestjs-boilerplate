@@ -1,45 +1,53 @@
 import {
   CallHandler,
   ExecutionContext,
-  HttpException,
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-export interface Response<T> {
-  data: T;
+export interface Response {
+  data: any;
+  meta?: {
+    page: number;
+    total_data: number;
+    total_page: number;
+  };
 }
 
 @Injectable()
-export class TransformInterceptor<T>
-  implements NestInterceptor<T, Response<T>>
-{
+export class TransformInterceptor<T> implements NestInterceptor<T, Response> {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
-  ): Observable<Response<T>> {
+  ): Observable<Response> {
     return next.handle().pipe(
       map((data) => this.responseHandler(data, context)),
-      catchError((err: HttpException) =>
-        throwError(() => this.errorHandler(err, context)),
-      ),
+      // catchError((err: HttpException) =>
+      //   throwError(() => this.errorHandler(err, context)),
+      // ),
     );
   }
 
-  errorHandler(_: unknown, context: ExecutionContext) {
-    const ctx = context.switchToHttp();
-    const response = ctx.getResponse();
+  // errorHandler(exception: unknown, context: ExecutionContext) {
+  //   const ctx = context.switchToHttp();
+  //   const response = ctx.getResponse();
 
-    response.status(500).json({
-      timestamp: new Date().toISOString(),
-    });
-  }
+  //   if (exception instanceof HttpException) {
+  //   } else if (exception instanceof Prisma.PrismaClientKnownRequestError) {
+  //     response.status(500).json({
+  //       error: 'dari prisma',
+  //     });
+  //   } else if (exception instanceof ZodError) {
+  //   }
 
-  responseHandler(res: T, _: ExecutionContext) {
-    return {
-      data: res,
-    };
+  //   response.status(500).json({
+  //     timestamp: new Date().toISOString(),
+  //   });
+  // }
+
+  responseHandler(res: any, _: ExecutionContext) {
+    return { ...res };
   }
 }
