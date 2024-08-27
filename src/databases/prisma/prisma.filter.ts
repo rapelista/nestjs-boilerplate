@@ -36,19 +36,19 @@ export class PrismaFilter implements ExceptionFilter {
   };
 
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
-    const status = this.errorStatusMapping[exception.code] || 500;
-    const code = this.errorCodeMapping[exception.code] || 'unknown';
-    const detail = this.errorDetailMapping[exception.code] || 'unknown error';
+    const status = this.errorStatusMapping[exception.code];
+    const code = this.errorCodeMapping[exception.code];
+    const detail = this.errorDetailMapping[exception.code];
 
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
 
-    return response.status(status).json({
+    return response.status(status || 500).json({
       type: 'client_error',
       errros: [
         {
-          code,
-          detail,
+          code: code || 'internal_server_error',
+          detail: detail || 'internal server error',
           attr: (exception?.meta?.target as string[])?.join(', ') ?? null,
         },
       ],

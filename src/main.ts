@@ -1,8 +1,8 @@
+import { AppModule } from '@/app.module';
+import { ResponseInterceptor } from '@/commons/interceptors/response.interceptor';
+import { ZodValidationFilter } from '@/commons/validations/zod/zod.filter';
+import { PrismaFilter } from '@/databases/prisma/prisma.filter';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ResponseInterceptor } from './commons/transforms/response.interceptor';
-import { ZodValidationFilter } from './commons/validations/zod/zod.filter';
-import { PrismaFilter } from './databases/prisma/prisma.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
