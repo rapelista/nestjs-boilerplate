@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/src/main.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/src/main.js",
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+    }
+  ],
+  "env": {
+    "DATABASE_URL": "postgresql://gvstang:VPM9J3zeDsSq@ep-purple-art-a1rkn6q8-pooler.ap-southeast-1.aws.neon.tech/boilerplate?sslmode=require&pool_timeout=0"
+  }
+}
