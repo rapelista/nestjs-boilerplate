@@ -22,14 +22,17 @@ type ErrorDetailMappingType = {
 export class PrismaFilter implements ExceptionFilter {
   private errorStatusMapping: ErrorStatusMappingType = {
     P2025: HttpStatus.NOT_FOUND,
+    P2002: HttpStatus.CONFLICT,
   };
 
   private errorCodeMapping: ErrorCodeMappingType = {
     P2025: 'not_found',
+    P2002: 'conflict',
   };
 
   private errorDetailMapping: ErrorDetailMappingType = {
     P2025: 'resource not found',
+    P2002: 'resource already exists',
   };
 
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
@@ -46,7 +49,7 @@ export class PrismaFilter implements ExceptionFilter {
         {
           code,
           detail,
-          attr: null,
+          attr: (exception?.meta?.target as string[])?.join(', ') ?? null,
         },
       ],
       timestamp: new Date().toISOString(),
