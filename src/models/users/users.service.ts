@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PaginationSchema } from 'src/commons/validations/zod/dto/pagination.dto';
 import { PrismaService } from 'src/databases/prisma/prisma.service';
 import { select } from './dto/select.dto';
@@ -38,6 +39,15 @@ export class UsersService {
 
     const data = await this.prisma.user.update({
       where: { id },
+      data: body,
+      select,
+    });
+
+    return { data };
+  }
+
+  async create(body: Prisma.UserCreateInput) {
+    const data = await this.prisma.user.create({
       data: body,
       select,
     });

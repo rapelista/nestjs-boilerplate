@@ -11,7 +11,9 @@ export function makeZodPositiveInt(context: string) {
 
 export function makeZodStringMinMax(context: string, min: number, max: number) {
   return z
-    .string()
+    .string({
+      required_error: `${context} is required`,
+    })
     .min(min, `${context} must be at least ${min} characters`)
     .max(max, `${context} must be at most ${max} characters`);
 }

@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, HttpCode, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { hash } from 'bcrypt';
 import { CommonSchema } from 'src/commons/validations/zod/dto/common.dto';
 import { PaginationSchema } from 'src/commons/validations/zod/dto/pagination.dto';
 import {
@@ -6,6 +15,7 @@ import {
   ZodValidatePagination,
 } from 'src/commons/validations/zod/zod.decorator';
 import { ZodValidationPipe } from 'src/commons/validations/zod/zod.pipe';
+import { createUserSchema, CreateUserSchema } from './dto/create.dto';
 import { UpdateUserSchema, updateUserSchema } from './dto/update.dto';
 import { UsersService } from './users.service';
 
@@ -21,6 +31,17 @@ export class UsersController {
   @Get(':id')
   async findOne(@ZodValidateCommon() params: CommonSchema) {
     return this.service.findOne(params.id);
+  }
+
+  @Post()
+  async create(
+    @Body(new ZodValidationPipe(createUserSchema)) body: CreateUserSchema,
+  ) {
+    const password = await hash('password', 10);
+    return this.service.create({
+      ...body,
+      password,
+    });
   }
 
   @Patch(':id')
