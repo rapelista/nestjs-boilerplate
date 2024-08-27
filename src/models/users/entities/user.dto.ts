@@ -1,5 +1,5 @@
 import { Role } from '@prisma/client';
-import { makeZodStringMinMax } from 'src/zod/zod.util';
+import { makeZodStringMinMax } from 'src/commons/validations/zod/zod.util';
 import { z } from 'zod';
 
 export const userSchema = z.object({

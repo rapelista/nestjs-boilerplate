@@ -1,5 +1,5 @@
-import { makeZodPositiveInt } from 'src/zod/zod.util';
 import { z } from 'zod';
+import { makeZodPositiveInt } from '../zod.util';
 
 export const paginationSchema = z.object({
   page: makeZodPositiveInt('page').default(1),

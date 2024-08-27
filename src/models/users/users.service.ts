@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { PaginationSchema } from 'src/zod/dto/pagination.dto';
+import { PaginationSchema } from 'src/commons/validations/zod/dto/pagination.dto';
+import { PrismaService } from 'src/databases/prisma/prisma.service';
 import { select } from './dto/select.dto';
 import { UpdateUserSchema } from './dto/update.dto';
 

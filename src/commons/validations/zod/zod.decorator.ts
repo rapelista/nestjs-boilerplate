@@ -1,8 +1,8 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { ZodValidationPipe } from 'src/zod/zod.pipe';
 import { ZodSchema } from 'zod';
 import { commonSchema } from './dto/common.dto';
 import { paginationSchema } from './dto/pagination.dto';
+import { ZodValidationPipe } from './zod.pipe';
 
 function validateDecorator(
   schema: ZodSchema,

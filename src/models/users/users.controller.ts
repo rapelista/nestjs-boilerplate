@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, HttpCode, Patch } from '@nestjs/common';
-import { CommonSchema } from 'src/zod/dto/common.dto';
-import { PaginationSchema } from 'src/zod/dto/pagination.dto';
+import { CommonSchema } from 'src/commons/validations/zod/dto/common.dto';
+import { PaginationSchema } from 'src/commons/validations/zod/dto/pagination.dto';
 import {
   ZodValidateCommon,
   ZodValidatePagination,
-} from 'src/zod/zod.decorator';
-import { ZodValidationPipe } from 'src/zod/zod.pipe';
+} from 'src/commons/validations/zod/zod.decorator';
+import { ZodValidationPipe } from 'src/commons/validations/zod/zod.pipe';
 import { UpdateUserSchema, updateUserSchema } from './dto/update.dto';
 import { UsersService } from './users.service';
 
